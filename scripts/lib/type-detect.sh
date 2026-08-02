@@ -2,8 +2,8 @@
 # type-detect.sh — auto-detect the enclosing CLI agent type.
 #
 # Extracted verbatim from whoami.sh so that other entry points (send.sh's
-# sender binding, BAS-25) can resolve "what kind of agent session am I running
-# inside" without shelling out to whoami.sh. Detection is driven by the
+# sender binding, ADR-0005) can resolve "what kind of agent session am I
+# running inside" without shelling out to whoami.sh. Detection is driven by the
 # per-type manifests' `detect=` (env-var names) and `detect_proc=` (process
 # name globs) keys — no hardcoded type list lives here.
 #

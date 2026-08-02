@@ -58,7 +58,9 @@ Do NOT manually edit config files. Always use join.sh. If the name was recently 
 # Check inbox (marks messages as read) — DEFAULT action
 ~/.agents/skills/agmsg/scripts/inbox.sh <team> <agent_id>
 
-# Send a message (from/to must already be registered in <team>; add --force to bypass)
+# Send a message (from/to must already be registered in <team>; add --force to bypass).
+# <from_agent> is bound to YOUR session's role: a session seated as one role
+# cannot send as another (the send is refused; --force does not bypass this).
 ~/.agents/skills/agmsg/scripts/send.sh <team> <from_agent> <to_agent> "<message>" [--force]
 
 # Message history

@@ -24,6 +24,15 @@ setup_test_env() {
   export SCRIPTS="$TEST_SKILL_DIR/scripts"
   export TYPES="$TEST_SKILL_DIR/scripts/drivers/types"
 
+  # Shed the developer's enclosing agent-session identity. Tests usually run
+  # INSIDE a Claude Code (or codex) session, so vars like
+  # CLAUDE_CODE_SESSION_ID leak in — and with sender binding (ADR-0005) a
+  # leaked session id makes send.sh resolve the TEST process as that live
+  # session, refusing sends the same test passes in CI (where no such var
+  # exists). Tests that exercise identity set these explicitly.
+  unset CLAUDE_CODE_SESSION_ID CODEX_THREAD_ID CODEX_SANDBOX GROK_SESSION_ID
+  unset AGMSG_AGENT_PID AGMSG_SENDER_BIND
+
   # Sandbox HOME so NO test can touch the developer's real home. Several paths
   # write under $HOME — e.g. codex-shim-install.sh creates $HOME/.agents/bin/codex
   # and install.sh's configure_codex_sandbox edits $HOME/.codex/config.toml — and

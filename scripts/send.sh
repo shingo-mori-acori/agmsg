@@ -13,9 +13,12 @@ if [ "${5:-}" = "--force" ]; then
 fi
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+SKILL_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"  # sender-binding.sh requires SKILL_DIR
 source "$SCRIPT_DIR/lib/storage.sh"
 # shellcheck disable=SC1091
 source "$SCRIPT_DIR/lib/validate.sh"
+# shellcheck disable=SC1091
+source "$SCRIPT_DIR/lib/sender-binding.sh"
 
 # #414: TEAM becomes a path segment (teams/$TEAM/config.json) below whether or
 # not --force is given, so validate it unconditionally, before any config-path
@@ -68,6 +71,13 @@ if [ "$FORCE" -ne 1 ]; then
   _agmsg_roster_check "from" "$FROM" || exit 1
   _agmsg_roster_check "to" "$TO" || exit 1
 fi
+
+# Bind <from> to the calling session's seat (ADR-0005): a session seated as
+# one role must not write a message attributed to another — the downstream
+# review-receipt gates read the sender field as evidence, and this is what
+# makes it evidence rather than a claim. Deliberately NOT bypassed by --force:
+# --force widens who may be messaged (roster), never who the caller is.
+agmsg_sender_check "$TEAM" "$FROM" || exit 1
 
 # Escape EVERY interpolated value as a SQL string literal, not just body: a
 # team/agent name containing a single quote would otherwise break the INSERT

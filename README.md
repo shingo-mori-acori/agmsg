@@ -420,6 +420,7 @@ Auto-detects installed skill directories and cleans up: skill files, slash comma
 |---|---|---|
 | `AGMSG_STORAGE_PATH` | `<skill>/db` | Directory holding the SQLite message store (`messages.db`). Override to relocate the store — handy for tests, sandboxes, or running isolated instances. |
 | `AGMSG_PLUGIN_DIRS` | (unset) | `:`-separated extra directories to search for external drivers, in addition to `<skill>/plugins`. Each holds `<axis>/<name>/` subdirs. Drivers found here are still ignored until opted into with `agmsg plugin trust`. See [docs/plugins.md](docs/plugins.md). |
+| `AGMSG_SENDER_BIND` | `on` | Sender binding ([ADR-0005](docs/adr/0005-sender-binding.md)): `send.sh` refuses a `<from>` that belongs to another live session's seat, or differs from the role the calling session is seated as in that team. Set `off` to disable (operator recovery — e.g. wedged seat state). Sends from callers with no resolvable session (humans at a terminal, CI, the desktop app) are unbound and unaffected. |
 
 The message store path resolves as **`AGMSG_STORAGE_PATH` (env) > built-in default**. (A config-file layer is planned to slot in between the two as part of the storage-driver work; the intended order is env > config > default.) The override is scoped to the SQLite store only — team configs under `teams/` are unaffected.
 
